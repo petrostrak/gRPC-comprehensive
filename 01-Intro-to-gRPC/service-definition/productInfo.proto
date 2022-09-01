@@ -1,7 +1,10 @@
 // ProductInfo.proto
+// protoc --proto_path=. --go_out=. --go_opt=paths=source_relative productInfo.proto
 syntax = "proto3";
 
 package ecommerce;
+
+option go_package = "github.com/petrostrak/gRPC-comprehensive";
 
 message Product {
     string id = 1;
