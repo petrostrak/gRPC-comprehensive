@@ -4,7 +4,7 @@ syntax = "proto3";
 
 package ecommerce;
 
-option go_package = "github.com/petrostrak/gRPC-comprehensive/service-definition/service/ecommerce";
+option go_package = "/commerce";
 
 message Product {
     string id = 1;
