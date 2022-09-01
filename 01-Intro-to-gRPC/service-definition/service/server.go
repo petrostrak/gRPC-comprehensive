@@ -3,19 +3,32 @@ package main
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/gofrs/uuid"
 	pb "github.com/petrostrak/gRPC-comprehensive/01-Intro-to-gRPC/service-definition/service/ecommerce"
 )
 
-// Add product remote method
-func AddProduct(ctx context.Context, in *pb.Product) (*pb.ProductID, error) {
+// server is used to implement ecommerce/product_info.
+type server struct {
+	productMap map[string]*pb.Product
+}
 
-	// business logic
-	pid := pb.ProductID{
-		Value: in.Id,
+// Add product remote method
+func (s *server) AddProduct(ctx context.Context, in *pb.Product) (*pb.ProductID, error) {
+	id, err := uuid.NewV4()
+	if err != nil {
+		return nil, fmt.Errorf("error while generating Product ID")
 	}
 
-	return &pid, nil
+	in.Id = id.String()
+
+	if s.productMap == nil {
+		s.productMap = make(map[string]*pb.Product)
+	}
+	s.productMap[in.Id] = in
+
+	return &pb.ProductID{Value: in.Id}, nil
 }
 
 // Get product remote method
