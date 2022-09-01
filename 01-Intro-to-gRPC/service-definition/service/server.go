@@ -14,7 +14,7 @@ type server struct {
 	productMap map[string]*pb.Product
 }
 
-// Add product remote method
+// AddProduct implements ecommerce.AddProduct
 func (s *server) AddProduct(ctx context.Context, in *pb.Product) (*pb.ProductID, error) {
 	id, err := uuid.NewV4()
 	if err != nil {
@@ -31,14 +31,12 @@ func (s *server) AddProduct(ctx context.Context, in *pb.Product) (*pb.ProductID,
 	return &pb.ProductID{Value: in.Id}, nil
 }
 
-// Get product remote method
-func getProduct(ctx context.Context, in *pb.ProductID) (*pb.Product, error) {
-	// business logic
-	p := pb.Product{
-		Id:          in.Value,
-		Name:        "prod",
-		Description: "This is a product",
+// GetProduct implements ecommerce.GetProduct
+func (s *server) getProduct(ctx context.Context, in *pb.ProductID) (*pb.Product, error) {
+	value, exists := s.productMap[in.Value]
+	if !exists {
+		return nil, fmt.Errorf("Product does not exist")
 	}
 
-	return &p, nil
+	return value, nil
 }
